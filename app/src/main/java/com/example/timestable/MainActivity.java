@@ -9,6 +9,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -51,6 +52,26 @@ public class MainActivity extends AppCompatActivity {
 
         //when user click on table button
         tableBn.setOnClickListener(v -> calculateTable());
+
+
+        //When an item in the ListView is clicked:delete iteam
+
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+            String item = TableList.get(position);
+            new AlertDialog.Builder(this)
+                    .setTitle("Delete Row")
+                    .setMessage("Do you want to delete " + item + "?")
+                    .setPositiveButton("Yes", (dialog, which) -> {
+                        TableList.remove(position);
+                        adapter.notifyDataSetChanged();
+                        Toast.makeText(this, "Deleted: " + item, Toast.LENGTH_SHORT).show();
+                    })
+                    .setNegativeButton("No", null)
+                    .show();
+        });
+    }
+    public static ArrayList<Integer> getHistoryList(){
+        return HistoryList;
     }
     public void calculateTable(){
        String number = userInput.getText().toString();
@@ -64,16 +85,11 @@ public class MainActivity extends AppCompatActivity {
         int Tnumber = Integer.parseInt(number);
         for( int i=1;i<=10;i++){
             TableList.add(Tnumber + " X " + i +" = " + (Tnumber*i));
-
         }
         adapter.notifyDataSetChanged();
-
-
         if(!HistoryList.contains(Tnumber)){
             HistoryList.add(Tnumber);
         }
-
-
 
 
     }
