@@ -1,5 +1,6 @@
 package com.example.timestable;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
@@ -19,7 +20,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button tableBn,HistoryBtn;
+    Button tableBn,HistoryBtn,clearbtn;
     EditText userInput;
 
     ListView listView;
@@ -28,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private static ArrayList<Integer> HistoryList = new ArrayList<>();
     private ArrayAdapter<String> adapter;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +40,26 @@ public class MainActivity extends AppCompatActivity {
         tableBn = findViewById(R.id.tableBtn);
         HistoryBtn = findViewById(R.id.historybtn);
         listView = findViewById(R.id.listview);
+
+        //bonus
+        clearbtn = findViewById(R.id.clearall);
+        clearbtn.setOnClickListener( v->{
+            // Show confirmation dialog
+            new AlertDialog.Builder(MainActivity.this)
+                    .setTitle("Clear All!")
+                    .setMessage("Do you want to delete all rows?")
+                    .setPositiveButton("Yes", (dialog, which) -> {
+                        TableList.clear();
+                        adapter.notifyDataSetChanged();
+                        Toast.makeText(MainActivity.this, "All rows cleared!", Toast.LENGTH_SHORT).show();
+                    })
+                    .setNegativeButton("No", null)
+                    .show();
+
+
+    });
+
+
 
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,TableList);
         listView.setAdapter(adapter);
